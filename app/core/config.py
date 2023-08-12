@@ -49,7 +49,7 @@ class Settings(BaseSettings):
         if isinstance(v, str):
             return v
         values = values.data
-        return f"postgresql+asyncpg://{values.get('POSTGRES_USER')}:{values.get('POSTGRES_PASSWORD')}@{values.get('POSTGRES_SERVER')}:{values.get('POSTGRES_PORT')}/{values.get('POSTGRES_DB') or ''}"
+        return f"postgresql://{values.get('POSTGRES_USER')}:{values.get('POSTGRES_PASSWORD')}@{values.get('POSTGRES_SERVER')}:{values.get('POSTGRES_PORT')}/{values.get('POSTGRES_DB') or ''}"
 
     # SMTP_TLS: bool = True
     # SMTP_PORT: Optional[int] = None
@@ -65,7 +65,7 @@ class Settings(BaseSettings):
     #         return values["PROJECT_NAME"]
     #     return v
     #
-    # EMAIL_RESET_TOKEN_EXPIRE_HOURS: int = 48
+    EMAIL_RESET_TOKEN_EXPIRE_HOURS: int = 48
     # EMAIL_TEMPLATES_DIR: str = "/app/app/email-templates/build"
     # EMAILS_ENABLED: bool = False
     #
@@ -80,6 +80,9 @@ class Settings(BaseSettings):
     # EMAIL_TEST_USER: EmailStr = "test@example.com"  # type: ignore
     # FIRST_SUPERUSER: EmailStr
     # FIRST_SUPERUSER_PASSWORD: str
-    # USERS_OPEN_REGISTRATION: bool = False
+    USERS_OPEN_REGISTRATION: bool = False
+    ALGORITHM: str = 'HS256'
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+
 
 settings = Settings()

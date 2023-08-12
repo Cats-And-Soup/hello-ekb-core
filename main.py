@@ -3,6 +3,9 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app.api.api_v1.router import api_router
 from app.core.config import settings
+from app.db.database import Base, engine
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title=settings.PROJECT_NAME, openapi_url=f"{settings.API_V1_STR}/openapi.json"
