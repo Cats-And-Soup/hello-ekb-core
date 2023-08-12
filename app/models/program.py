@@ -8,11 +8,9 @@ from app.db.database import Base
 from app.shared.types import Rating
 
 
-class Feedback(Base):
-    __tablename__ = "feedbacks"
+class Program(Base):
+    __tablename__ = "programs"
 
     id = Column(Integer, index=True, primary_key=True)
-    event_id = Column(Integer, ForeignKey("events.id"))
     user_id = Column(Integer, ForeignKey("users.id"))
-    msg = Column(String(length=256))
-    rating = Column(Enum(Rating), nullable=False)
+    name = Column(String(length=64), nullable=False, default="Название")
