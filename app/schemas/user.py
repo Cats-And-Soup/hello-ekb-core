@@ -10,6 +10,7 @@ class UserBase(BaseModel):
     email: Optional[EmailStr] = None
     name: str
     role: Roles = Roles.user
+    image_src: str = "https://crypto.ru/wp-content/plugins/q-auth/assets/img/default-user.png"
 
 
 # Properties to receive via API on creation

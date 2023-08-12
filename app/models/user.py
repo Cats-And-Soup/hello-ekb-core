@@ -16,3 +16,5 @@ class User(Base):
     name = Column(String, nullable=False)
     hashed_password = Column(String, nullable=False)
     role = Column(Enum(Roles), default=Roles.user)
+    image_src = Column(String, nullable=False,
+                       default="https://crypto.ru/wp-content/plugins/q-auth/assets/img/default-user.png")

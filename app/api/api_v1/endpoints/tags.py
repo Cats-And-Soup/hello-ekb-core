@@ -23,12 +23,12 @@ def get_tags(
 def create_tag(
     *,
     db: Session = Depends(deps.get_db),
-    item_in: schemas.Tag
+    tag_in: schemas.Tag
 ) -> models.Tag:
     """
     Create new tag.
     """
-    tag = crud.tag.create(db=db, obj_in=item_in)
+    tag = crud.tag.create(db=db, obj_in=tag_in)
     return tag
 
 

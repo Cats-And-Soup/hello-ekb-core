@@ -10,8 +10,10 @@ class BaseEvent(BaseModel):
     description: str = None
     date: datetime.date
     time: datetime.time
+    address: str
     lon: str
     lat: str
+    image_src: str = "https://crypto.ru/wp-content/plugins/q-auth/assets/img/default-user.png"
     tags: list[str]
     duration: int = 0
     price: int = 0

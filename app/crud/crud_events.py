@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Type
 
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
@@ -18,6 +18,31 @@ class CRUDEvent(CRUDBase[Event, CreateEvent, UpdateEvent]):
         db.commit()
         db.refresh(db_obj)
         return db_obj
+
+    def search_from_title(self, db: Session, *, text: str) -> List[Type[Event]]:
+        return db.query(self.model).filter(self.model.title.like(f"%{text}%")).all()
+
+    def get_filter(
+            self, db: Session,
+            *,
+            skip: int = 0,
+            limit: int = 100,
+            address: str | None = None,
+            tags: set[str] | None = None,
+    ) -> List[Type[Event]]:
+        query = db.query(self.model)
+        if address is not None:
+            query = query.filter_by(address=address)
+        query = query.offset(skip).limit(limit)
+        if tags is not None:
+            query = query.all()
+            tmp_query = query[::]
+            for elem in tmp_query:
+                if not all(list(map(lambda x: True if x in elem.tags else False, tags))):
+                    query.remove(elem)
+        else:
+            query = query.all()
+        return query
 
 
 event = CRUDEvent(Event)
