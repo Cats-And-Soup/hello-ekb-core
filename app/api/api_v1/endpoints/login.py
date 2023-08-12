@@ -1,37 +1,59 @@
 from datetime import timedelta
 from typing import Any
 
-from fastapi import APIRouter, Body, Depends, HTTPException
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import APIRouter, Body, Depends, HTTPException, status
+# from fastapi.security import OAuth2PasswordRequestForm
+from pydantic.networks import EmailStr
 from sqlalchemy.orm import Session
 
 from app import models, schemas, crud
 from app.api import deps
 from app.core import security
 from app.core.config import settings
-from app.core.security import get_password_hash
+from app.api.deps import check_token
 
 router = APIRouter()
 
 
-@router.post("/login/access-token", response_model=schemas.Token)
+@router.post("/login", response_model=schemas.Token)
 def login_access_token(
-    db: Session = Depends(deps.get_db), form_data: OAuth2PasswordRequestForm = Depends()
+    db: Session = Depends(deps.get_db),
+    password: str = Body(...),
+    username: EmailStr = Body(...)
 ) -> Any:
     """
     OAuth2 compatible token login, get an access token for future requests
     """
     user = crud.user.authenticate(
-        db, email=form_data.username, password=form_data.password
+        db, email=username, password=password
     )
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect email or password")
-    # elif not crud.user.is_active(user):
-    #     raise HTTPException(status_code=400, detail="Inactive user")
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     return {
         "access_token": security.create_access_token(
             user.id, expires_delta=access_token_expires
+        ),
+        "token_type": "bearer",
+    }
+
+
+@router.post("/refresh", response_model=schemas.Token)
+def test_token(current_user: models.User = Depends(deps.get_current_user),
+               access_token: str = Body(...)) -> Any:
+    """
+    Refresh token.
+    """
+    token_data = check_token(access_token)
+    if not token_data:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Could not validate credentials",
+        )
+    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    return {
+        "access_token": security.create_access_token(
+            current_user.id, expires_delta=access_token_expires
         ),
         "token_type": "bearer",
     }
