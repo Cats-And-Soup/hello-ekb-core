@@ -31,3 +31,16 @@ def create_tag(
     tag = crud.tag.create(db=db, obj_in=item_in)
     return tag
 
+
+@router.post("/remove", response_model=schemas.Tag)
+def remove_tag(
+    *,
+    db: Session = Depends(deps.get_db),
+    tag_in: schemas.Tag
+) -> models.Tag:
+    """
+    Remove tag.
+    """
+    tag = crud.tag.remove(db=db, id=tag_in.name)
+    return tag
+

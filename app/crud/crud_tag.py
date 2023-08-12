@@ -18,5 +18,11 @@ class CRUDTag(CRUDBase[Tag, TagSchemas, TagSchemas]):
         db.refresh(db_obj)
         return db_obj
 
+    def remove(self, db: Session, *, id: str) -> Tag:
+        obj = db.query(self.model).get(id)
+        db.delete(obj)
+        db.commit()
+        return obj
+
 
 tag = CRUDTag(Tag)
