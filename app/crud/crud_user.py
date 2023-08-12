@@ -49,5 +49,8 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
     def is_manager(self, user: User) -> bool:
         return user.role == Roles.manager
 
+    def is_user(self, user: User) -> bool:
+        return user.role == Roles.user
+
 
 user = CRUDUser(User)
