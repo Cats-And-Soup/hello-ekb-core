@@ -20,7 +20,7 @@ def get_event(
     limit: int = 4,
     address: str = None,
     tags: Annotated[list[str] | None, Query()] = None
-) -> list[models.Event]:
+) -> list[Any]:
     """
     Get all events.
     """

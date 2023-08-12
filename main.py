@@ -6,7 +6,6 @@ from app.core.config import settings
 from app.db.database import Base, engine
 
 Base.metadata.create_all(bind=engine)
-
 app = FastAPI(
     title=settings.PROJECT_NAME, openapi_url=f"{settings.API_V1_STR}/openapi.json"
 )

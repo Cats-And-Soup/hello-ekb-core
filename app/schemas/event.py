@@ -8,8 +8,8 @@ from pydantic import BaseModel
 class BaseEvent(BaseModel):
     title: str
     description: str = None
-    date: datetime.date
-    time: datetime.time
+    start_datetime: datetime.datetime
+    end_datetime: datetime.datetime
     address: str
     lon: str
     lat: str
