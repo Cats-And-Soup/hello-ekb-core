@@ -19,17 +19,18 @@ def get_favorites(
     return crud.favorite.get_by_user_id(db, user_id)
 
 
-@router.post("/create", response_model=schemas.Favorite)
+@router.post("/create")
 def create_favorite(
     *,
     db: Session = Depends(deps.get_db),
     fb_in: schemas.Favorite
-) -> models.Favorite:
+) -> list[int]:
     """
     Create new favorite.
     """
     fb = crud.favorite.create(db=db, obj_in=fb_in)
-    return fb
+    events_id = crud.favorite.get_by_user_id(db=db, user_id=fb_in.user_id)
+    return list(map(lambda x: x.event_id, events_id))
 
 
 @router.post("/remove", response_model=schemas.Favorite)

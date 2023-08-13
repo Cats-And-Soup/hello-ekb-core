@@ -39,7 +39,8 @@ class CRUDEvent(CRUDBase[Event, CreateEvent, UpdateEvent]):
         if price is not None:
             query = query.filter_by(price=price)
         if today:
-            query = query.filter(self.model.start_datetime >= datetime.datetime.now().date())
+            now = datetime.datetime.now().date()
+            query = query.filter(self.model.start_datetime.between(datetime.datetime.strptime(f"{now} 00:00", "%Y-%m-%d %H:%M"), datetime.datetime.strptime(f"{now} 23:59", "%Y-%m-%d %H:%M")))
         query = query.offset(skip).limit(limit)
         if tags is not None:
             query = query.all()
