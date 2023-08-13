@@ -2,6 +2,7 @@ from .crud_user import user
 from .crud_events import event
 from .crud_tag import tag
 from .crud_feedback import feedback
+from .crud_favorite import favorite
 # For a new basic set of CRUD operations you could just do
 
 # from .base import CRUDBase

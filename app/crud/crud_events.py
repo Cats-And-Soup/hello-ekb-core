@@ -1,3 +1,4 @@
+import datetime
 from typing import List, Type
 
 from fastapi.encoders import jsonable_encoder
@@ -5,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.crud.base import CRUDBase
 from app.models.event import Event
-from app.schemas.event import EventInDBBase, CreateEvent, UpdateEvent
+from app.schemas.event import CreateEvent, UpdateEvent
 
 
 class CRUDEvent(CRUDBase[Event, CreateEvent, UpdateEvent]):
@@ -29,10 +30,16 @@ class CRUDEvent(CRUDBase[Event, CreateEvent, UpdateEvent]):
             limit: int = 100,
             address: str | None = None,
             tags: set[str] | None = None,
+            price: int | None = None,
+            today: bool = False,
     ) -> List[Type[Event]]:
         query = db.query(self.model)
         if address is not None:
             query = query.filter_by(address=address)
+        if price is not None:
+            query = query.filter_by(price=price)
+        if today:
+            query = query.filter(self.model.start_datetime >= datetime.datetime.now().date())
         query = query.offset(skip).limit(limit)
         if tags is not None:
             query = query.all()

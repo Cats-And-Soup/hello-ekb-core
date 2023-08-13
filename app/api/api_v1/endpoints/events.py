@@ -1,14 +1,10 @@
-from typing import Any, List, Annotated
-import datetime
+from typing import Any, Annotated
 
-from fastapi import APIRouter, Body, Depends, HTTPException, Query
-from fastapi.encoders import jsonable_encoder
-from pydantic.networks import EmailStr
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from app import models, schemas, crud
 from app.api import deps
-from app.core.config import settings
 
 router = APIRouter()
 
@@ -18,13 +14,15 @@ def get_event(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 4,
-    address: str = None,
-    tags: Annotated[list[str] | None, Query()] = None
+    address: Annotated[str | None, Query(max_length=256)] = None,
+    tags: Annotated[list[str] | None, Query()] = None,
+    price: int = None,
+    today: bool = 0
 ) -> list[Any]:
     """
     Get all events.
     """
-    return crud.event.get_filter(db, skip=skip, limit=limit, address=address, tags=tags)
+    return crud.event.get_filter(db, skip=skip, limit=limit, address=address, tags=tags, price=price, today=today)
 
 
 @router.get("/get/{id_event}", response_model=schemas.EventInDBBase)
@@ -43,7 +41,7 @@ def get_event(
 def find_event(
     db: Session = Depends(deps.get_db),
     *,
-    text: str
+    text: Annotated[str | None, Query(min_length=2, max_length=64)]
 ) -> list[models.Event]:
     """
     Search events.
@@ -65,7 +63,7 @@ def create_event(
 
 
 @router.put("/update/{id_event}", response_model=schemas.UpdateEvent)
-def update_item(
+def update_event(
     *,
     db: Session = Depends(deps.get_db),
     id_event: int,

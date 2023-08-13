@@ -1,8 +1,4 @@
-from typing import TYPE_CHECKING
-
-
-from sqlalchemy import Boolean, Column, Integer, String, Enum, ForeignKey, PrimaryKeyConstraint
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, Enum, ForeignKey, PrimaryKeyConstraint
 
 from app.db.database import Base
 from app.shared.types import Rating

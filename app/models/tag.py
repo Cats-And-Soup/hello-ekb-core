@@ -1,11 +1,6 @@
-from typing import TYPE_CHECKING
-
-
-from sqlalchemy import Boolean, Column, Integer, String, Enum
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, String
 
 from app.db.database import Base
-from app.shared.types import Roles
 
 
 class Tag(Base):

@@ -10,6 +10,7 @@ class UserBase(BaseModel):
     email: Optional[EmailStr] = None
     name: str
     role: Roles = Roles.user
+    tags: list[str] = []
     image_src: str = "https://crypto.ru/wp-content/plugins/q-auth/assets/img/default-user.png"
 
 

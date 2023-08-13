@@ -1,8 +1,5 @@
-from typing import Any, Dict, Optional, Union, Type
-
 from sqlalchemy.orm import Session
 
-from app.core.security import get_password_hash, verify_password
 from app.crud.base import CRUDBase
 from app.models.tag import Tag
 from app.schemas.tag import Tag as TagSchemas

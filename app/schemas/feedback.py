@@ -1,6 +1,4 @@
-from typing import Optional
-
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 
 from app.shared.types import Rating
 

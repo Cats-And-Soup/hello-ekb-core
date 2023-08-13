@@ -1,11 +1,9 @@
-from typing import List, Type, Optional
-
-from fastapi.encoders import jsonable_encoder
+from typing import Type
 from sqlalchemy.orm import Session
 
 from app.crud.base import CRUDBase
 from app.models.feedback import Feedback
-from app.schemas.feedback import FeedbackInDBBase, CreateFeedback, UpdateFeedback
+from app.schemas.feedback import CreateFeedback, UpdateFeedback
 
 
 class CRUDFeedback(CRUDBase[Feedback, CreateFeedback, UpdateFeedback]):

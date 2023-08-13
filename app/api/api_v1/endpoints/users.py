@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any
 from datetime import timedelta
 
 from fastapi import APIRouter, Body, Depends, HTTPException
@@ -20,8 +20,9 @@ def create_user_open(
     *,
     db: Session = Depends(deps.get_db),
     password: str = Body(...),
-    email: EmailStr = Body(...),
-    name: str = Body(None),
+    email: EmailStr = Body(..., max_length=128),
+    name: str = Body(None, max_length=64),
+    tags: list[str] = Body([]),
 ) -> Any:
     """
     Create new user without the need to be logged in.
@@ -37,7 +38,7 @@ def create_user_open(
             status_code=400,
             detail="The user with this username already exists in the system",
         )
-    user_in = schemas.UserCreate(password=password, email=email.lower(), name=name.lower())
+    user_in = schemas.UserCreate(password=password, email=email.lower(), name=name.lower(), tags=tags)
     user = crud.user.create(db, obj_in=user_in)
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     return {
@@ -54,9 +55,10 @@ def create_user_open(
 def update_user_me(
     *,
     db: Session = Depends(deps.get_db),
-    email: EmailStr = Body(None),
+    email: EmailStr = Body(None, max_length=128),
     password: str = Body(None),
     name: str = Body(None),
+    tags: list[str] = Body(None),
     current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
@@ -70,6 +72,8 @@ def update_user_me(
         user_in.name = name.lower()
     if email is not None:
         user_in.email = email.lower()
+    if tags is not None:
+        user_in.tags = tags
     user = crud.user.update(db, db_obj=current_user, obj_in=user_in)
     return user
 

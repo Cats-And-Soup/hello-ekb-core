@@ -1,8 +1,4 @@
-from typing import TYPE_CHECKING
-
-
-from sqlalchemy import Boolean, Column, Integer, String, Enum, Float, DateTime, Time, Text, ARRAY, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, DateTime, Text, ARRAY
 
 from app.db.database import Base
 

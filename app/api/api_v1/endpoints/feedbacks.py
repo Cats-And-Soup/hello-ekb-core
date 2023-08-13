@@ -1,30 +1,26 @@
-from typing import Any, List, Annotated
-import datetime
+from typing import List
 
-from fastapi import APIRouter, Body, Depends, HTTPException, Query
-from fastapi.encoders import jsonable_encoder
-from pydantic.networks import EmailStr
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app import models, schemas, crud
 from app.api import deps
-from app.core.config import settings
 
 router = APIRouter()
 
 
 @router.get("/", response_model=List[schemas.FeedbackInDBBase])
-def get_tags(
+def get_fb(
     db: Session = Depends(deps.get_db)
 ) -> list[models.Feedback]:
     """
-    Get all tags.
+    Get all feedback.
     """
     return crud.feedback.get_multi(db)
 
 
 @router.get("/rating")
-def get_tags(
+def get_rating(
     db: Session = Depends(deps.get_db),
     *,
     event_id: int
@@ -44,7 +40,7 @@ def get_tags(
 
 
 @router.post("/create", response_model=schemas.CreateFeedback)
-def create_tag(
+def create_fb(
     *,
     db: Session = Depends(deps.get_db),
     fb_in: schemas.CreateFeedback

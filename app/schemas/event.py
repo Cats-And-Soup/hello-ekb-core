@@ -11,8 +11,8 @@ class BaseEvent(BaseModel):
     start_datetime: datetime.datetime
     end_datetime: datetime.datetime
     address: str
-    lon: str
-    lat: str
+    lon: str = "56.788751"
+    lat: str = "60.475066"
     image_src: str = "https://crypto.ru/wp-content/plugins/q-auth/assets/img/default-user.png"
     tags: list[str]
     duration: int = 0
