@@ -41,7 +41,7 @@ def get_event(
 def find_event(
     db: Session = Depends(deps.get_db),
     *,
-    text: Annotated[str | None, Query(min_length=2, max_length=64)]
+    text: Annotated[str | None, Query(max_length=64)]
 ) -> list[models.Event]:
     """
     Search events.
